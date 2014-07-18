@@ -67,7 +67,7 @@ public class NewsFragment extends Fragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				// TODO Auto-generated method stubss
 				sendReq.execute(url);
 				
 			}
@@ -76,7 +76,7 @@ public class NewsFragment extends Fragment {
         relLayout.addView(retrieveNames);
         
         
-        /*ToggleButton btn1 = new ToggleButton(getActivity());
+        /*ToggleButton btn1 = new ToggleButton(getActivity());sss
         btn1.setTextOn("Toggle On");
         btn1.setTextOff("Toggle Off");
         btn1.setChecked(true);
