@@ -19,6 +19,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -146,9 +147,10 @@ public class NewsFragment extends Fragment {
 		   try {
 			   Log.i("TEST TEST", "HERE 1");
 			   response = httpclient.execute(new HttpGet(
-					   "https://api.mongolab.com/api/1/databases/testprateek/collections/new_collection?q=" +
-						URLEncoder.encode("{\"name\": \"Paula Petersen\"}", "UTF-8") +
-						"&apiKey=13z0kWZhKpuCAHvDCcRYx_H0EacWTnAc"
+					   "https://api.mongolab.com/api/1/databases/testprateek/collections/new_collection?apiKey=13z0kWZhKpuCAHvDCcRYx_H0EacWTnAc"
+					   //"https://api.mongolab.com/api/1/databases/testprateek/collections/new_collection?q=" +
+					   //URLEncoder.encode("{\"name\": \"Paula Petersen\"}", "UTF-8") +
+					   //"&apiKey=13z0kWZhKpuCAHvDCcRYx_H0EacWTnAc"
 					   ));
 			   Log.i("TEST TEST", "HERE 2");
 		   } catch (ClientProtocolException e) {
@@ -160,7 +162,7 @@ public class NewsFragment extends Fragment {
 		   }
 			
 		   StatusLine statusLine = response.getStatusLine();
-		   Log.i("TEST TEST", String.valueOf(statusLine.getStatusCode()));
+		   //Log.i("TEST TEST", String.valueOf(statusLine.getStatusCode()));
 	       if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
 	    	   ByteArrayOutputStream out = new ByteArrayOutputStream();
 	    	   try {
@@ -176,7 +178,7 @@ public class NewsFragment extends Fragment {
 	    		   e.printStackTrace();
 	    	   }
 	    	   String responseString = out.toString();
-	    	   Log.i("TEST TEST", responseString);
+	    	   //Log.i("TEST TEST", responseString);
 	    	   return responseString;
 	        }
 	        else {
@@ -194,8 +196,40 @@ public class NewsFragment extends Fragment {
 		protected void onPostExecute(String result) {
 			//delegate.processFinish(result);
 			
-			//relLayout = (RelativeLayout) view.findViewById(R.id.rel_layout);
+			relLayout = (RelativeLayout) view.findViewById(R.id.rel_layout);
 			progressDialog.dismiss();
+			
+			JSONArray toastmasterMembers = null;
+			JSONObject memberName = new JSONObject();
+			
+			try {
+				toastmasterMembers = new JSONArray(result);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			for (int i=0; i< toastmasterMembers.length(); i++) {
+				
+				try {
+					memberName = toastmasterMembers.getJSONObject(i);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				TextView txtView = new TextView(getActivity());
+				txtView.setId(i);
+				
+				try {
+					txtView.setText(memberName.getString("name"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				txtView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				relLayout.addView(txtView);
+			}
 			
 			/*JSONObject jsonObj = null; 
 			
