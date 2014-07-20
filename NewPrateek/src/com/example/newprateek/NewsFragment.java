@@ -185,7 +185,7 @@ public class NewsFragment extends Fragment {
 	        	try {
 	        		response.getEntity().getContent().close();
 				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
+					// TODO Auto-generated catch blockds
 					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
