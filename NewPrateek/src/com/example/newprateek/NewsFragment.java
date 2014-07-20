@@ -68,7 +68,7 @@ public class NewsFragment extends Fragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stubss
+				// TODO Auto-generated method stubs
 				sendReq.execute(url);
 				
 			}
