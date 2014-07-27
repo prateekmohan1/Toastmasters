@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -45,8 +46,20 @@ import com.mongodb.tools.*;
 import com.mongodb.util.*;
 import com.mongodb.util.management.*;
 import com.mongodb.util.management.jmx.*;
+import java.security.SecureRandom;
 
 public class NewsFragment extends Fragment {	
+	
+	public final class SessionIDGen {
+		
+		private SecureRandom random = new SecureRandom();
+		
+		public String nextSessionID() {
+			return new BigInteger(130, random).toString(32);
+		}
+		
+	}
+	
 	
 	RelativeLayout relLayout;
 	Button retrieveNames;
@@ -75,7 +88,7 @@ public class NewsFragment extends Fragment {
 				
 			}
 		});
-        retrieveNames.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        //retrieveNames.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         relLayout.addView(retrieveNames);
         
         
@@ -204,6 +217,12 @@ public class NewsFragment extends Fragment {
 			relLayout = (RelativeLayout) view.findViewById(R.id.rel_layout);
 			progressDialog.dismiss();
 			
+			LinearLayout linLayout = new LinearLayout(getActivity());
+			linLayout.setOrientation(LinearLayout.VERTICAL);
+			
+			LinearLayout.LayoutParams linParams = new LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
+			linLayout.setLayoutParams(linParams);
+			
 			JSONArray toastmasterMembers = null;
 			JSONObject memberName = new JSONObject();
 			
@@ -213,6 +232,8 @@ public class NewsFragment extends Fragment {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			linLayout.setId(toastmasterMembers.length() + 1);
 			
 			for (int i=0; i< toastmasterMembers.length(); i++) {
 				
@@ -224,7 +245,6 @@ public class NewsFragment extends Fragment {
 				}
 				
 				TextView txtView = new TextView(getActivity());
-				txtView.setId(i);
 				
 				try {
 					txtView.setText(memberName.getString("name"));
@@ -234,8 +254,15 @@ public class NewsFragment extends Fragment {
 				}
 				//RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT, android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
 				//layoutParams.addRule(RelativeLayout.ABOVE, retrieveNames.getId());
-				relLayout.addView(txtView);
+				linLayout.addView(txtView);
 			}
+			
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			params.addRule(RelativeLayout.BELOW,linLayout.getId());
+			
+			relLayout.addView(linLayout);
+			
+			retrieveNames.setLayoutParams(params);
 			
 			/*JSONObject jsonObj = null; 
 			
