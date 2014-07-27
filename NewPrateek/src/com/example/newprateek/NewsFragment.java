@@ -47,20 +47,10 @@ import com.mongodb.util.*;
 import com.mongodb.util.management.*;
 import com.mongodb.util.management.jmx.*;
 import java.security.SecureRandom;
+import java.util.Random;
 
 public class NewsFragment extends Fragment {	
-	
-	public final class SessionIDGen {
 		
-		private SecureRandom random = new SecureRandom();
-		
-		public String nextSessionID() {
-			return new BigInteger(130, random).toString(32);
-		}
-		
-	}
-	
-	
 	RelativeLayout relLayout;
 	Button retrieveNames;
 	
@@ -217,11 +207,12 @@ public class NewsFragment extends Fragment {
 			relLayout = (RelativeLayout) view.findViewById(R.id.rel_layout);
 			progressDialog.dismiss();
 			
-			LinearLayout linLayout = new LinearLayout(getActivity());
-			linLayout.setOrientation(LinearLayout.VERTICAL);
+			RelativeLayout textrelLayout = new RelativeLayout(getActivity());
 			
-			LinearLayout.LayoutParams linParams = new LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
-			linLayout.setLayoutParams(linParams);
+			RelativeLayout.LayoutParams linParams = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT, android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+			textrelLayout.setLayoutParams(linParams);
+			
+			textrelLayout.setId(new Random().nextInt());
 			
 			JSONArray toastmasterMembers = null;
 			JSONObject memberName = new JSONObject();
@@ -233,7 +224,7 @@ public class NewsFragment extends Fragment {
 				e.printStackTrace();
 			}
 			
-			linLayout.setId(toastmasterMembers.length() + 1);
+			TextView[] TMNames = new TextView[toastmasterMembers.length()];
 			
 			for (int i=0; i< toastmasterMembers.length(); i++) {
 				
@@ -244,23 +235,29 @@ public class NewsFragment extends Fragment {
 					e.printStackTrace();
 				}
 				
-				TextView txtView = new TextView(getActivity());
-				
 				try {
-					txtView.setText(memberName.getString("name"));
+					TMNames[i].setText(memberName.getString("name"));
+					TMNames[i].setId(new Random().nextInt());
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				//RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT, android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
 				//layoutParams.addRule(RelativeLayout.ABOVE, retrieveNames.getId());
-				linLayout.addView(txtView);
+				if (i > 0){
+					RelativeLayout.LayoutParams tempParams = new RelativeLayout.LayoutParams(
+							RelativeLayout.LayoutParams.WRAP_CONTENT,
+							RelativeLayout.LayoutParams.WRAP_CONTENT);
+					tempParams.addRule(RelativeLayout.BELOW,TMNames[i-1].getId());
+					TMNames[i].setLayoutParams(tempParams);
+				}
+				textrelLayout.addView(TMNames[i]);
 			}
 			
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			params.addRule(RelativeLayout.BELOW,linLayout.getId());
+			params.addRule(RelativeLayout.BELOW,textrelLayout.getId());
 			
-			relLayout.addView(linLayout);
+			relLayout.addView(textrelLayout);
 			
 			retrieveNames.setLayoutParams(params);
 			
