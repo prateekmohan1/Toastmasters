@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -48,6 +49,7 @@ import com.mongodb.util.management.jmx.*;
 public class NewsFragment extends Fragment {	
 	
 	RelativeLayout relLayout;
+	Button retrieveNames;
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +64,7 @@ public class NewsFragment extends Fragment {
         
         final sendGet sendReq = new sendGet(rootView);
         
-        Button retrieveNames = new Button(getActivity());
+        retrieveNames = new Button(getActivity());
         retrieveNames.setText("Retrieve Names");
         retrieveNames.setOnClickListener(new View.OnClickListener() {
 			
@@ -230,7 +232,8 @@ public class NewsFragment extends Fragment {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				txtView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				//RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT, android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+				//layoutParams.addRule(RelativeLayout.ABOVE, retrieveNames.getId());
 				relLayout.addView(txtView);
 			}
 			
